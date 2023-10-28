@@ -1,0 +1,102 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body, #main{
+    height: 100%;
+    width: 100%;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+#main{
+    height: 100vh;
+    background: url(bg2.jpg);
+    object-fit: fill;
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#inside{
+    width: 18rem;
+    height: 26rem;
+    background: url(bg3.jpg);
+    object-fit: cover;
+    background-size: cover;
+    background-position: center;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    position: absolute;
+}
+
+table{
+    border: 5px solid #035d8f;
+    border-radius: 10px;
+    height: 12rem;
+    width: 14rem;
+    text-align: center;
+    font-size: 40px;
+    font-weight: 800;
+}
+
+h1{
+    font-size: 3rem;
+    -webkit-text-stroke: 1px #085a66;
+}
+
+h3{
+    color:chocolate;
+}
+
+td{
+    height: 70px;
+    width: 70px;
+    border: 2px solid #085a66;
+    border-radius: 5px;
+    color: #00affa;
+    -webkit-text-stroke: 2px #085a66;
+}
+
+#restart{
+    border: 2px solid #085a66;
+    border-radius: 8px;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-top: 18px;
+    width: 8rem;
+    height: 3rem;
+}
+
+h1, #restart{
+    background: linear-gradient(
+        to right,
+        #7953cd 20%,
+        #00affa 30%,
+        #0190cd 70%,
+        #764ada 80%
+    );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 500% auto;
+    animation: textShine 5s ease-in-out infinite alternate;
+}
+
+@keyframes textShine {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
