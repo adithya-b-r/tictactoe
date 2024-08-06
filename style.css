@@ -8,6 +8,7 @@ html, body, #main{
     height: 100%;
     width: 100%;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    position: absolute;
 }
 
 #main{
@@ -142,6 +143,7 @@ h2{
     font-size: 46px;
     text-align: center;
 }
+
 #page1 button{
     height: 2.5rem;
     width: 6rem;
@@ -153,6 +155,14 @@ h2{
     background-color: #67c250;
     border-color:#764ada;
     cursor: pointer;
+}
+
+.credit {
+    font-size: 1.1rem;
+    color: var(--black);
+    text-align: center;
+    position: relative;
+    top: 95vh;
 }
 
 @media (max-width:600px) {

@@ -9,7 +9,7 @@ inside.style.display = 'none';
 var letters = ['X', 'O'];
 var p1;
 var p2;
-var prev = 'X';
+var prev = 'X'; // Player starts with 'X'
 var cont = true;
 var clicked = 0;
 var board = ['', '', '', '', '', '', '', '', ''];
@@ -24,6 +24,9 @@ function win() {
   document.getElementById('restart').style.display = 'block';
   globalThis.cont = false;
   globalThis.clicked = 0;
+  if (prev == 'X' && p2 == 'A.I') {
+    setTimeout(startNewRound, 2000); // Start new round after 2 seconds if AI wins
+  }
 }
 
 function check() {
@@ -31,11 +34,15 @@ function check() {
   if (winner !== null) {
     if (winner == 'tie') {
       document.getElementById("info").innerHTML = "It's a tie!";
+      document.getElementById('restart').style.display = 'block';
     } else {
       if (winner == 'X') {
         document.getElementById("info").innerHTML = p1 + " [X] wins!";
       } else {
         document.getElementById("info").innerHTML = p2 + " [O] wins!";
+        if (p2 == 'A.I') {
+          setTimeout(startNewRound, 5000); // Start new round after 2 seconds if AI wins
+        }
       }
     }
     document.getElementById('restart').style.display = 'block';
@@ -92,24 +99,19 @@ table.addEventListener("click", function (e) {
         cell.innerHTML = letters[0];
         board[cellIndex] = 'X';
         prev = 'O';
-        document.getElementById("info").innerHTML = p1 + " [" + prev + "] : Your Turn";
+        document.getElementById("info").innerHTML = p2 + " [" + prev + "] : Your Turn";
       } else if (prev == 'O') {
         cell.innerHTML = letters[1];
         board[cellIndex] = 'O';
         prev = 'X';
-        document.getElementById("info").innerHTML = p2 + " [" + prev + "] : Your Turn";
+        document.getElementById("info").innerHTML = p1 + " [" + prev + "] : Your Turn";
       }
 
-      if (clicked == 8) {
-        globalThis.clicked = 0;
-        document.getElementById('restart').style.display = 'block';
-      }
-      globalThis.clicked = clicked + 1;
+      clicked++;
       check();
 
       if (cont === true && prev == 'O' && p2 == 'A.I') {
-        bestMove();
-        check();
+        setTimeout(bestMove, 500); // AI makes a move after a brief pause
       }
     }
   }
@@ -133,6 +135,7 @@ function bestMove() {
   document.getElementById('b' + (move + 1)).innerHTML = 'O';
   prev = 'X';
   document.getElementById("info").innerHTML = p1 + " [" + prev + "] : Your Turn";
+  check();
 }
 
 function minimax(board, depth, isMaximizing) {
@@ -172,7 +175,7 @@ function minimax(board, depth, isMaximizing) {
   }
 }
 
-restart.addEventListener("click", function (e) {
+function startNewRound() {
   globalThis.cont = true;
   document.getElementById('restart').style.display = 'none';
 
@@ -184,9 +187,10 @@ restart.addEventListener("click", function (e) {
   });
   board = ['', '', '', '', '', '', '', '', ''];
 
-  if (prev == 'O') {
-    document.getElementById("info").innerHTML = p1 + " [" + prev + "] : Your Turn";
-  } else if (prev == 'X') {
-    document.getElementById("info").innerHTML = p2 + " [" + prev + "] : Your Turn";
-  }
+  prev = 'X'; // Ensure player starts with 'X'
+  document.getElementById("info").innerHTML = p1 + " [" + prev + "] : Your Turn";
+}
+
+restart.addEventListener("click", function (e) {
+  startNewRound();
 });
