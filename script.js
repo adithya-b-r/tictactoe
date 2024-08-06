@@ -1,139 +1,192 @@
-var table = document.getElementById("myTable")
-var restart = document.getElementById("restart")
-var inside = document.getElementById("inside")
-var page1 = document.getElementById("page1")
-var start = document.getElementById("start")
+var table = document.getElementById("myTable");
+var restart = document.getElementById("restart");
+var inside = document.getElementById("inside");
+var page1 = document.getElementById("page1");
+var start = document.getElementById("start");
 
-inside.style.display = 'none'
-// page1.style.display = 'none'
+inside.style.display = 'none';
 
-var letters = ['X', 'O']
-var p1
-var p2
-var prev = 'O'
-var cont = true
-var clicked = 0
-boxes = ['b1','b2','b3','b4','b5','b6','b7','b8','b9']
-document.getElementById('restart').style.display = 'none'
+var letters = ['X', 'O'];
+var p1;
+var p2;
+var prev = 'X';
+var cont = true;
+var clicked = 0;
+var board = ['', '', '', '', '', '', '', '', ''];
+document.getElementById('restart').style.display = 'none';
 
 function win() {
   if (prev == 'X') {
-    document.getElementById("info").innerHTML = p1+" [O] wins!"
+    document.getElementById("info").innerHTML = p1 + " [O] wins!";
+  } else {
+    document.getElementById("info").innerHTML = p2 + " [X] wins!";
   }
-  else {
-    document.getElementById("info").innerHTML = p2+" [X] wins!"
-  }
-  document.getElementById('restart').style.display = 'block'
-  globalThis.cont = false
-  globalThis.clicked = 0
+  document.getElementById('restart').style.display = 'block';
+  globalThis.cont = false;
+  globalThis.clicked = 0;
 }
 
 function check() {
-  if (b1.innerHTML == b2.innerHTML && b2.innerHTML == b3.innerHTML) {
-    if (b1.innerHTML != '' && b2.innerHTML != '' && b3.innerHTML != '')
-      win()
-  }
-  if (b4.innerHTML == b5.innerHTML && b5.innerHTML == b6.innerHTML) {
-    if (b4.innerHTML != '' && b5.innerHTML != '' && b6.innerHTML != '')
-      win()
-  }
-  if (b7.innerHTML == b8.innerHTML && b8.innerHTML == b9.innerHTML) {
-    if (b7.innerHTML != '' && b8.innerHTML != '' && b9.innerHTML != '')
-      win()
-  }
-  if (b1.innerHTML == b4.innerHTML && b4.innerHTML == b7.innerHTML) {
-    if (b1.innerHTML != '' && b4.innerHTML != '' && b7.innerHTML != '')
-      win()
-  }
-  if (b2.innerHTML == b5.innerHTML && b5.innerHTML == b8.innerHTML) {
-    if (b2.innerHTML != '' && b5.innerHTML != '' && b8.innerHTML != '')
-      win()
-  }
-  if (b3.innerHTML == b6.innerHTML && b6.innerHTML == b9.innerHTML) {
-    if (b3.innerHTML != '' && b6.innerHTML != '' && b9.innerHTML != '')
-      win()
-  }
-  if (b1.innerHTML == b5.innerHTML && b5.innerHTML == b9.innerHTML) {
-    if (b1.innerHTML != '' && b5.innerHTML != '' && b9.innerHTML != '')
-      win()
-  }
-  if (b7.innerHTML == b5.innerHTML && b5.innerHTML == b3.innerHTML) {
-    if (b7.innerHTML != '' && b5.innerHTML != '' && b3.innerHTML != '')
-      win()
+  let winner = checkWinner();
+  if (winner !== null) {
+    if (winner == 'tie') {
+      document.getElementById("info").innerHTML = "It's a tie!";
+    } else {
+      if (winner == 'X') {
+        document.getElementById("info").innerHTML = p1 + " [X] wins!";
+      } else {
+        document.getElementById("info").innerHTML = p2 + " [O] wins!";
+      }
+    }
+    document.getElementById('restart').style.display = 'block';
+    globalThis.cont = false;
+    globalThis.clicked = 0;
   }
 }
 
-start.addEventListener("click", function(e){
-  var p1 = document.getElementById('p1').value
-  var p2 = document.getElementById('p2').value
+function checkWinner() {
+  let winner = null;
+  let winningCombinations = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6]
+  ];
 
-  if(p1 == '' || p2 == '' || p1 == ' ' || p2 == ' '){
-    alert("Please enter valid player name!")
+  for (let combination of winningCombinations) {
+    let [a, b, c] = combination;
+    if (board[a] && board[a] == board[b] && board[a] == board[c]) {
+      winner = board[a];
+    }
   }
-  else{
-    globalThis.p1 = p1
-    globalThis.p2 = p2
-    inside.style.display = 'flex'
-    page1.style.display = 'none'
-    document.getElementById("info").innerHTML = p1+" [" + prev + "] : Your Turn"
+
+  if (winner == null && !board.includes('')) {
+    return 'tie';
+  } else {
+    return winner;
   }
-})
+}
+
+start.addEventListener("click", function (e) {
+  var p1 = document.getElementById('p1').value;
+  var p2 = document.getElementById('p2').value;
+
+  if (p1 == '' || p2 == '' || p1 == ' ' || p2 == ' ') {
+    alert("Please enter valid player name!");
+  } else {
+    globalThis.p1 = p1;
+    globalThis.p2 = p2;
+    inside.style.display = 'flex';
+    page1.style.display = 'none';
+    document.getElementById("info").innerHTML = p1 + " [" + prev + "] : Your Turn";
+  }
+});
 
 table.addEventListener("click", function (e) {
   if (e.target && e.target.nodeName == "TD") {
-    var cell = e.target
-    if (cont === true && cell.innerHTML == '') {
+    var cell = e.target;
+    var cellIndex = Array.from(cell.parentNode.children).indexOf(cell) +
+      Array.from(cell.parentNode.parentNode.children).indexOf(cell.parentNode) * 3;
+
+    if (cont === true && board[cellIndex] == '') {
       if (prev == 'X') {
-        cell.innerHTML = letters[0]
-        prev = 'O'
-        document.getElementById("info").innerHTML = p1+" [" + prev + "] : Your Turn"
-      }
-      else if(prev == 'O') {
-        cell.innerHTML = letters[1]
-        prev = 'X'
-        document.getElementById("info").innerHTML = p2+" [" + prev + "] : Your Turn"
+        cell.innerHTML = letters[0];
+        board[cellIndex] = 'X';
+        prev = 'O';
+        document.getElementById("info").innerHTML = p1 + " [" + prev + "] : Your Turn";
+      } else if (prev == 'O') {
+        cell.innerHTML = letters[1];
+        board[cellIndex] = 'O';
+        prev = 'X';
+        document.getElementById("info").innerHTML = p2 + " [" + prev + "] : Your Turn";
       }
 
-      if(clicked == 8){
-        globalThis.clicked = 0
-        document.getElementById('restart').style.display = 'block'
+      if (clicked == 8) {
+        globalThis.clicked = 0;
+        document.getElementById('restart').style.display = 'block';
       }
-      globalThis.clicked = clicked + 1
-      check()
+      globalThis.clicked = clicked + 1;
+      check();
+
+      if (cont === true && prev == 'O' && p2 == 'A.I') {
+        bestMove();
+        check();
+      }
     }
   }
-})
+});
+
+function bestMove() {
+  let bestScore = -Infinity;
+  let move;
+  for (let i = 0; i < board.length; i++) {
+    if (board[i] == '') {
+      board[i] = 'O';
+      let score = minimax(board, 0, false);
+      board[i] = '';
+      if (score > bestScore) {
+        bestScore = score;
+        move = i;
+      }
+    }
+  }
+  board[move] = 'O';
+  document.getElementById('b' + (move + 1)).innerHTML = 'O';
+  prev = 'X';
+  document.getElementById("info").innerHTML = p1 + " [" + prev + "] : Your Turn";
+}
+
+function minimax(board, depth, isMaximizing) {
+  let scores = {
+    'X': -1,
+    'O': 1,
+    'tie': 0
+  };
+
+  let result = checkWinner();
+  if (result !== null) {
+    return scores[result];
+  }
+
+  if (isMaximizing) {
+    let bestScore = -Infinity;
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] == '') {
+        board[i] = 'O';
+        let score = minimax(board, depth + 1, false);
+        board[i] = '';
+        bestScore = Math.max(score, bestScore);
+      }
+    }
+    return bestScore;
+  } else {
+    let bestScore = Infinity;
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] == '') {
+        board[i] = 'X';
+        let score = minimax(board, depth + 1, true);
+        board[i] = '';
+        bestScore = Math.min(score, bestScore);
+      }
+    }
+    return bestScore;
+  }
+}
 
 restart.addEventListener("click", function (e) {
-  globalThis.cont = true
-  document.getElementById('restart').style.display = 'none'
-  
-  const tdElem = document.querySelectorAll('td')
+  globalThis.cont = true;
+  document.getElementById('restart').style.display = 'none';
 
-  //Clears all the boxes.
-  tdElem.forEach(function(td){
+  const tdElem = document.querySelectorAll('td');
+
+  // Clears all the boxes and board array.
+  tdElem.forEach(function (td) {
     td.innerHTML = '';
-  })
+  });
+  board = ['', '', '', '', '', '', '', '', ''];
 
   if (prev == 'O') {
-    document.getElementById("info").innerHTML = p1+" [" + prev + "] : Your Turn"
+    document.getElementById("info").innerHTML = p1 + " [" + prev + "] : Your Turn";
+  } else if (prev == 'X') {
+    document.getElementById("info").innerHTML = p2 + " [" + prev + "] : Your Turn";
   }
-  else if(prev == 'X') {
-    document.getElementById("info").innerHTML = p2+" [" + prev + "] : Your Turn"
-  }
-})
-
-// function computer(){
-//   const sel = Math.floor(Math.random() * boxes.length+1)
-//   boxes.length = boxes.length -1
-//   del = boxes.splice(sel, 1)
-//   console.log(del, boxes)
-// }
-
-// Random function
-// const months = ["January", "February", "March", "April", "May", "June", "July"]
-// const random = Math.floor(Math.random() * months.length)
-// console.log(random, months[random])
-
-// Delete by index
-// numbers.splice(index, 1)
+});

@@ -14,9 +14,12 @@
             <h2>Welcome to<br>Tic Tac Toe</h2>
             <div id="grp">
                 <label>Player 1 : </label>
-                <input type="text" id="p1" .required>
+                <input type="text" id="p1" required>
                 <label>Player 2 :</label>
-                <input type="text" id="p2" .required>
+                <input type="text" id="p2" list="p2List" required>
+                <datalist id="p2List">
+                    <option value="A.I">
+                </datalist>
             </div>
             <button id="start">Start</button>
         </div>
@@ -44,7 +47,8 @@
             </table>
             <button id="restart">Restart</button>
         </div>
-</div>
+    </div>
 </body>
 <script src="script.js"></script>
+
 </html>
