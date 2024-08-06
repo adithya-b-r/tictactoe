@@ -167,7 +167,7 @@ h2{
 
 @media (max-width:600px) {
     #main{
-        max-width: 99vh;
+        max-width: 100%;
         max-height: 100%;
         object-fit: cover;
     }
@@ -194,5 +194,15 @@ h2{
         /* color: #000; */
         background-color: #0b97a7;
         font-weight: 800;
+    }
+    
+    .credit {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--black);
+        color: #fff;
+        text-align: center;
+        position: relative;
+        top: 96%;
     }
 }
