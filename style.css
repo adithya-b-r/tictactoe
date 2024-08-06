@@ -167,7 +167,7 @@ h2{
 
 @media (max-width:600px) {
     #main{
-        max-width: 100%;
+        max-width: 99vh;
         max-height: 100%;
         object-fit: cover;
     }
